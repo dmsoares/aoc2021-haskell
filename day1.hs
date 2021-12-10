@@ -1,7 +1,8 @@
 module Day1 where
 
-import           Control.Monad
-import           System.IO
+import           Control.Monad ()
+import           System.IO     (IOMode (ReadMode), hClose, hGetContents,
+                                openFile)
 
 main = do
   let list = []
