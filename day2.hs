@@ -1,9 +1,5 @@
 module Day2 where
 
-import           Control.Monad                     ()
-import           System.Directory.Internal.Prelude (getArgs)
-import           System.IO
-
 main = do
   content <- readFile "day2-input"
   let linesOfFiles = lines content
