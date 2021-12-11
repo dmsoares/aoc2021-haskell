@@ -10,11 +10,11 @@ main = do
   print (part1 linesOfFiles)
 
 part1 :: [String] -> Int
-part1 = (\(x, y, p) -> p) . foldl nextPos (0, 0, 1)
+part1 =  uncurry (*) . foldl nextPos (0, 0)
 
-nextPos :: (Int, Int, Int) -> String -> (Int, Int, Int)
-nextPos (x, y, n) str =
+nextPos :: (Int, Int) -> String -> (Int, Int)
+nextPos (x, y) str =
   case words str of
-    ["forward", n] -> (x + read n, y, (x + read n) * y)
-    ["down", n]    -> (x, y + read n, x * y + read n)
-    ["up", n]      -> (x, y - read n, x * y - read n)
+    ["forward", n] -> (x + read n, y)
+    ["down", n]    -> (x, y + read n)
+    ["up", n]      -> (x, y - read n)
