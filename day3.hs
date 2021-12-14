@@ -23,6 +23,14 @@ binToDec = fst . foldr f (0, 0)
   where f True (n, p) = (n + 2 ^ p, p + 1)
         f _ (n, p)    = (n, p + 1)
 
+part1 :: [String] -> Int
+part1 lines =
+  let transposed = transpose lines
+      gamma = map gammaPartial transposed
+      epsilon = gammaToEpsilon gamma
+  in
+    binToDec gamma * binToDec epsilon
+
 strToBin :: String -> [Bool]
 strToBin = map (== '1')
 
@@ -45,14 +53,6 @@ co2Scrub = go 0
       if not . gammaPartial . (!! i) . transpose $ m
       then go (i + 1) $ filter ((== '1') . (!! i)) m
       else go (i + 1) $ filter ((== '0') . (!! i)) m
-
-part1 :: [String] -> Int
-part1 lines =
-  let transposed = transpose lines
-      gamma = map gammaPartial transposed
-      epsilon = gammaToEpsilon gamma
-  in
-    binToDec gamma * binToDec epsilon
 
 part2 :: [String] -> Int
 part2 lines =
