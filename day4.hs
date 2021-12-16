@@ -8,8 +8,10 @@ main = do
   let numbers = parseNumbers . head $ lines contents
       boards = flip parseBoards 5 . drop 1 . filter (/= "") $ lines contents
   print $ part1 boards numbers
+  print $ part2 boards numbers
 
-part1 boards numbers = score $ game (map buildBoard boards) numbers
+part1 boards numbers = score $ gameP1 (map buildBoard boards) numbers
+part2 boards numbers = score $ gameP2 (map buildBoard boards) numbers
 
 -- copied this utility from https://stackoverflow.com/questions/4978578/how-to-split-a-string-in-haskell
 wordsWhen     :: (Char -> Bool) -> String -> [String]
@@ -63,13 +65,20 @@ sumMaybeInt = foldr f 0
     f Nothing b  = b
     f (Just a) b = a + b
 
-game :: [Board] -> [Int] -> (Maybe Board, Maybe Int)
-game bs ns = go bs ns Nothing
+gameP1 :: [Board] -> [Int] -> (Maybe Board, Maybe Int)
+gameP1 bs ns = go bs ns Nothing
   where go bs (n:ns) lastN
           | not (null winner) = (Just (head winner), lastN)
           | otherwise = go (playRound n bs) ns (Just n)
           where winner = findWinner bs
         go _ _ _ = (Nothing, Nothing)
+
+gameP2 :: [Board] -> [Int] -> (Maybe Board, Maybe Int)
+gameP2 bs ns = go bs ns Nothing Nothing
+  where
+    go [] _ lastB lastN = (lastB, lastN)
+    go bs (n:ns) lastBs lastN = go bs' ns (head . map Just . filter isBoardComplete $ playRound n bs) (Just n)
+      where bs' = filter (not . isBoardComplete) $ playRound n bs
 
 score :: (Maybe Board, Maybe Int) -> Int
 score (Just b, Just n) = n * (sum . map sumMaybeInt $ b)
